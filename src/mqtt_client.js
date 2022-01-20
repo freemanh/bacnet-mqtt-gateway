@@ -33,8 +33,8 @@ class MqttClient extends EventEmitter {
         this.client.on('connect', () => {
             this._onConnect();
         });
-        this.client.on('error', (error) => {
-            logger.log('error', 'Could not connect: ' + err.message);
+        this.client.on('error', () => {
+            logger.log('error', 'Could not connect MQTT broker');
         });
     }
 
@@ -43,13 +43,22 @@ class MqttClient extends EventEmitter {
 
         this.client.on('message', (msg) => this._onMessage(msg));
 
+        this.client.subscribe('devices/' + gatewayId + '/state/update')
+
         this.client.on('error', function (err) {
             logger.log('error', err);
         });
     };
 
     _onMessage(msg) {
-        logger.log('info', `Received message ${msg}`);
+        // {"3_3001906": {"name":"NAE45L-01", "value": 78}}
+        logger.log('info', `Received message: ${msg}`);
+        if(msg){
+            const cmd = JSON.parse(msg)
+            Object.entries(cmd).forEach((key, value)=>{
+                
+            })
+        }
     }
 
     publishMessage(messageJson) {

@@ -1,6 +1,6 @@
 {
     "mqtt": {
-        "gatewayId": "YOUR INFINIMESH DEVICE ID",
+        "gatewayId": "500",
         "host": "localhost",
         "port": 1883
     },

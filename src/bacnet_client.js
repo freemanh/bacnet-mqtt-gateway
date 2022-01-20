@@ -46,6 +46,17 @@ class BacnetClient extends EventEmitter {
         });
     }
 
+    _writePresentValue(deviceAddress, type, instance, value) {
+        return new Promise((resolve, reject) => {
+            this.client.writeProperty(deviceAddress, { type: type, instance: instance }, bacnet.enum.PropertyIds.PROP_PRESENT_VALUE, [{ tag: bacnet.enum.ApplicationTags.BACNET_APPLICATION_TAG_ENUMERATED, value: value }], (error, value) => {
+                resolve({
+                    error: error,
+                    value: value
+                });
+            });
+        });
+    }
+
     _readObjectFull(deviceAddress, type, instance) {
         return this._readObject(deviceAddress, type, instance, [
             { id: bacnet.enum.PropertyIds.PROP_OBJECT_IDENTIFIER },
@@ -144,8 +155,8 @@ class BacnetClient extends EventEmitter {
                     const objectName = this._findValueById(object.values[0].values, bacnet.enum.PropertyIds.PROP_OBJECT_NAME);
 
                     values[objectId] = {};
-	                  values[objectId].value = presentValue;
-	                  values[objectId].name = objectName;
+                    values[objectId].value = presentValue;
+                    values[objectId].name = objectName;
                 });
                 this.emit('values', device, values);
             }).catch(function (error) {
